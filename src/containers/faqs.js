@@ -1,18 +1,28 @@
 import faqsData from '../fixtures/faqs.json';
-import { Accordion } from '../components';
+import { Accordion, OptForm } from '../components';
 
 export function FaqsContainer() {
+    const { Title, Header, Body, Item } = Accordion;
+    const { Input, Button, Text } = OptForm;
     return (
         <Accordion>
-            <Accordion.Title>Frequently Asked Questions</Accordion.Title>
+            <Title>Frequently Asked Questions</Title>
             {faqsData.map((item) => {
                 return (
-                    <Accordion.Item key={item.id}>
-                        <Accordion.Header>{item.header}</Accordion.Header>
-                        <Accordion.Body>{item.body}</Accordion.Body>
-                    </Accordion.Item>
+                    <Item key={item.id}>
+                        <Header>{item.header}</Header>
+                        <Body>{item.body}</Body>
+                    </Item>
                 );
             })}
+            <OptForm>
+                <Input placeholder="Email Address" />
+                <Button>Try it now</Button>
+                <Text>
+                    Ready to watch? Enter your emal to create or restart your
+                    membership
+                </Text>
+            </OptForm>
         </Accordion>
     );
 }
