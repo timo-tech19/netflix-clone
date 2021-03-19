@@ -2,10 +2,13 @@
 import { Switch } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import { IsUserRedirect, ProtectedRoute } from './helpers/routes';
+import { useAuthListener } from './hooks';
 import { Home, Browse, Signin, Signup } from './pages';
 
 function App() {
-    const user = {};
+    const user = useAuthListener();
+    console.log(user);
+
     return (
         <>
             <Switch>
