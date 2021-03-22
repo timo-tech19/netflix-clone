@@ -19,7 +19,7 @@ Profiles.Item = function ProfilesItem({ children, ...restProps }) {
 Profiles.Picture = function ProfilesPicture({ src, ...restProps }) {
     return (
         <Picture
-            src={src ? `/images/users/${src}.png` : '/mages/misc/loading.gif'}
+            src={src ? `/images/users/${src}.png` : '/images/misc/loading.gif'}
             {...restProps}
         />
     );
