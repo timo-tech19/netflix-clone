@@ -1,14 +1,17 @@
 import { useContext, useState, useEffect } from 'react';
 import { FirebaseContext } from '../context/firebase';
 import { SelectProfileContainer } from './profiles';
-import { Header, Loading } from '../components';
+import { Card, Header, Loading } from '../components';
 import * as ROUTES from '../constants/routes';
 import logo from '../logo.svg';
 
 export function BrowseContainer({ slides }) {
+    const [category, setCategory] = useState('films');
     const [searchTerm, setSearchTerm] = useState('');
     const [profile, setProfile] = useState({});
     const [loading, setLoading] = useState(true);
+    const [slideRows, setSlideRows] = useState([]);
+
     const { firebase } = useContext(FirebaseContext);
     const user = firebase.auth().currentUser || {};
 
@@ -17,6 +20,10 @@ export function BrowseContainer({ slides }) {
             setLoading(false);
         }, 3000);
     }, [profile.displayName]);
+
+    useEffect(() => {
+        setSlideRows(slides[category]);
+    }, [slides, category]);
 
     return profile.displayName ? (
         <>
@@ -33,8 +40,18 @@ export function BrowseContainer({ slides }) {
                             alt="Netflix"
                             src={logo}
                         />
-                        <Header.Link>Films</Header.Link>
-                        <Header.Link>Series</Header.Link>
+                        <Header.Link
+                            active={category === 'films' ? 'true' : 'false'}
+                            onClick={() => setCategory('films')}
+                        >
+                            Films
+                        </Header.Link>
+                        <Header.Link
+                            active={category === 'series' ? 'true' : 'false'}
+                            onClick={() => setCategory('series')}
+                        >
+                            Series
+                        </Header.Link>
                     </Header.Group>
                     <Header.Group>
                         <Header.Search
@@ -77,8 +94,43 @@ export function BrowseContainer({ slides }) {
                         eligendi? Tempore modi ipsa tenetur quibusdam adipisci
                         provident dolore.
                     </Header.Text>
+                    <Header.PlayButton>Play</Header.PlayButton>
                 </Header.Feature>
             </Header>
+
+            <Card.Group>
+                {slideRows.map((slideItem) => {
+                    return (
+                        <Card
+                            key={`${category}-${slideItem.title.toLowerCase()}`}
+                        >
+                            <Card.Title>{slideItem.title}</Card.Title>
+                            <Card.Entities>
+                                {slideItem.data.map((item) => {
+                                    return (
+                                        <Card.Item key={item.docId} item={item}>
+                                            <Card.Image
+                                                src={`/images/${category}/${item.genre}/${item.slug}/small.jpg`}
+                                            />
+                                            <Card.Meta>
+                                                <Card.SubTitle>
+                                                    {item.title}
+                                                </Card.SubTitle>
+                                                <Card.Text>
+                                                    {item.description}
+                                                </Card.Text>
+                                            </Card.Meta>
+                                        </Card.Item>
+                                    );
+                                })}
+                            </Card.Entities>
+                            <Card.Feature category={category}>
+                                <p>Hello</p>
+                            </Card.Feature>
+                        </Card>
+                    );
+                })}
+            </Card.Group>
         </>
     ) : (
         <SelectProfileContainer user={user} setProfile={setProfile} />
